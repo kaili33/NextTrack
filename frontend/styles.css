@@ -1,0 +1,19 @@
+.backgroundGreen {
+    background-color: #096B68;
+}
+.btn-close {
+    font-size: small;
+}
+
+.albumArt {
+    width: 100%;
+    height: auto;
+}
+.bi-youtube {
+    color: red;
+    font-size: 20px;
+}
+.bi-spotify {
+    color: limegreen;
+    font-size: 20px;
+}
