@@ -1,13 +1,16 @@
+require('dotenv').config();
 const express = require('express');
 const axios = require('axios');
 const cors = require('cors');
-const { query } = require('express-validator');
 
 const app = express();
-const PORT = 8000;
+const PORT = process.env.PORT || 8000;
 
 app.use(cors());
 app.use(express.json());
+
+const clientId = process.env.SPOTIFY_CLIENT_ID;
+const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
 
 
 app.get('/song/:songName', async (req, res) => {
@@ -162,11 +165,7 @@ app.get('/recommendations', async (req, res) => {
             headers: { 'User-Agent': 'NextTrack/1.0 (kailiee.03@gmail.com)' }
         });
         const recordings = response.data.recordings || [];
-        
-        const clientId = '401c324b40374c5c95332f4919359a86';
-        const clientSecret = 'aa54e780dee74a54886e4b151e695aab';
         const token = await getSpotifyToken(clientId, clientSecret);
-
         const titleRegex = /\s*[\(\[].*?(?:″|B-side|remix|re-edit|mix|extended).*?[\)\]]\s*$/i;
 
         const recommendations = await Promise.all(recordings.filter((song) => {
@@ -181,7 +180,6 @@ app.get('/recommendations', async (req, res) => {
             const interviewInTitle = song.title.toLowerCase().includes("Interview");
 
             // Check if genre is in title to avoid messy data
-            // const genreInTitle = genre.some(genre => song.title.toLowerCase().includes(genre));
             const altVersions = titleRegex.test(song.title);
             
             return official && !isLive && !isInterview && !interviewInTitle && !altVersions;
